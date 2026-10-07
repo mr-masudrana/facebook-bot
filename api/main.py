@@ -66,7 +66,9 @@ def fetch_via_graph_api(identifier):
         r = requests.get(url, timeout=5)
         data = r.json()
         
-        if "error" in data: return None
+        if "error" in data:
+            print("GRAPH ERROR:", data["error"])
+            return None
         
         return {
             "name": data.get("name", "Unknown"),
@@ -89,6 +91,8 @@ def fetch_via_html(url):
         r = requests.get(mobile_url, headers=headers, timeout=10)
         
         soup = BeautifulSoup(r.text, "html.parser")
+        
+        print("HTML:", r.status_code, r.url, soup.title.text if soup.title else None)
         
         # মেটা ট্যাগ থেকে ডাটা খোঁজা
         name = soup.find("title").text if soup.find("title") else "Unknown User"
